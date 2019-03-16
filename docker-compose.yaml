@@ -1,0 +1,19 @@
+version: "3"
+
+services:
+  tmsftt-db:
+    image: mysql
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      - MYSQL_USER=root
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=TMSFTT
+  tmsftt-apis:
+    container_name: tmsftt-apis
+    build: rest-api
+    command: python manage.py runserver 0.0.0.0:80
+    ports:
+      - "8080:80"
+    links:
+      - tmsftt-db
