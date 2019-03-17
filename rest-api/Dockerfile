@@ -15,6 +15,13 @@ RUN pip install -r /requirements.txt
 # Copy project
 COPY TMSFTT-BE /
 
+# Copy health checker
+COPY wait-for-it.sh /
+
+# Copy entrypoint.sh
+COPY entrypoint.sh /
+RUN chmod a+x /entrypoint.sh
+
 WORKDIR /
 
 EXPOSE 80

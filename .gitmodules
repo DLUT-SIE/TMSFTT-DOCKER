@@ -2,5 +2,5 @@
 	path = rest-api/TMSFTT-BE
 	url = https://github.com/DLUT-SIE/TMSFTT-BE
 [submodule "angular-app/TMSFTT-FE"]
-	path = angular-app/TMSFTT-FE
+	path = web-server/TMSFTT-FE
 	url = https://github.com/DLUT-SIE/TMSFTT-FE
