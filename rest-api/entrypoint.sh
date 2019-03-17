@@ -6,4 +6,4 @@ python manage.py migrate
 
 # Start server
 echo "Starting server"
-python manage.py runserver 0.0.0.0:80
+uwsgi --socket :8080 --ini /uwsgi.ini

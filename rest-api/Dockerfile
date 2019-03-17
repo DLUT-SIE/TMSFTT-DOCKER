@@ -12,9 +12,6 @@ COPY TMSFTT-BE/requirements.txt /
 # Install dependencies
 RUN pip install -r /requirements.txt
 
-# Copy project
-COPY TMSFTT-BE /
-
 # Copy health checker
 COPY wait-for-it.sh /
 
@@ -22,6 +19,12 @@ COPY wait-for-it.sh /
 COPY entrypoint.sh /
 RUN chmod a+x /entrypoint.sh
 
+# COPY uwsgi config file
+COPY uwsgi.ini /
+
+# Copy project
+COPY TMSFTT-BE /
+
 WORKDIR /
 
-EXPOSE 80
+EXPOSE 8080

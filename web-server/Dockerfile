@@ -30,3 +30,4 @@ COPY --from=builder /app/dist/out /usr/share/nginx/html
 
 # Copy nginx configuration file
 COPY ./nginx/nginx.conf /etc/nginx/conf.d/default.conf
+COPY ./nginx/uwsgi_params /

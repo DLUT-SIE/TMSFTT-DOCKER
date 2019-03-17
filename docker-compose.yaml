@@ -1,25 +1,40 @@
-version: "3"
+version: "3.6"
 
 services:
   tmsftt-db:
     image: mysql
     container_name: tmsftt-db
-    command: --default-authentication-plugin=mysql_native_password
+    command: --default-authentication-plugin=mysql_native_password --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
     restart: always
     environment:
       - MYSQL_USER=root
-      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/mysql-root-password
       - MYSQL_DATABASE=TMSFTT
+    secrets:
+      - mysql-root-password
   tmsftt-apis:
     container_name: tmsftt-apis
     build: rest-api
     command: ["./wait-for-it.sh", "tmsftt-db:3306", "-s", "-t", "30", "--", "./entrypoint.sh"]
-    ports:
-      - "9080:80"
+    environment:
+      - SECRET_KEY_FILE=/run/secrets/django-secret-key
+      - DATABASE_PASSWORD_FILE=/run/secrets/mysql-root-password
+      - DJANGO_SETTINGS_MODULE=TMSFTT.settings_prod
+    secrets:
+      - django-secret-key
+      - mysql-root-password
     depends_on:
       - tmsftt-db
   tmsftt-web-server:
     container_name: tmsftt-web-server
     build: web-server
     ports:
-      - "8080:80"
+      - "8000:80"
+    depends_on:
+      - tmsftt-apis
+
+secrets:
+  django-secret-key:
+    file: ./secrets/django-secret-key
+  mysql-root-password:
+    file: ./secrets/mysql-root-password
