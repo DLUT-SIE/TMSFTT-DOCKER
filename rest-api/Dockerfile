@@ -10,7 +10,7 @@ ENV PYTHONUNBUFFERED 1
 COPY TMSFTT-BE/requirements.txt /
 
 # Install dependencies
-RUN pip install -r /requirements.txt
+RUN pip install -i https://pypi.tuna.tsinghua.edu.cn/simple -r /requirements.txt
 
 # Copy health checker
 COPY wait-for-it.sh /

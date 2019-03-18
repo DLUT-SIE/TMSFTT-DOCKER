@@ -3,9 +3,7 @@ version: "3.6"
 services:
   tmsftt-db:
     image: mysql
-    container_name: tmsftt-db
     command: --default-authentication-plugin=mysql_native_password --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
-    restart: always
     environment:
       - MYSQL_USER=root
       - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/mysql-root-password
@@ -13,9 +11,8 @@ services:
     secrets:
       - mysql-root-password
   tmsftt-apis:
-    container_name: tmsftt-apis
-    build: rest-api
-    command: ["./wait-for-it.sh", "tmsftt-db:3306", "-s", "-t", "30", "--", "./entrypoint.sh"]
+    image: tmsftt-apis:1.0
+    command: ["./wait-for-it.sh", "tmsftt-db:3306", "-s", "-t", "30", "--", "uwsgi", "--ini", "/uwsgi.ini"]
     environment:
       - SECRET_KEY_FILE=/run/secrets/django-secret-key
       - DATABASE_PASSWORD_FILE=/run/secrets/mysql-root-password
@@ -23,15 +20,35 @@ services:
     secrets:
       - django-secret-key
       - mysql-root-password
+    ports:
+      - "9000:8080"
     depends_on:
       - tmsftt-db
+    deploy:
+      mode: global
+      restart_policy:
+        condition: on-failure
+        delay: 3s
   tmsftt-web-server:
-    container_name: tmsftt-web-server
-    build: web-server
+    image: tmsftt-web-server:1.0
     ports:
       - "8000:80"
     depends_on:
       - tmsftt-apis
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 3s
+  visualizer:
+    image: dockersamples/visualizer:stable
+    ports:
+      - "8080:8080"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    deploy:
+      placement:
+        constraints: [node.role == manager]
 
 secrets:
   django-secret-key:
