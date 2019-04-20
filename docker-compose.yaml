@@ -8,11 +8,15 @@ services:
       - MYSQL_USER=root
       - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/mysql-root-password
       - MYSQL_DATABASE=TMSFTT
+    volumes:
+      - "./data/db-data:/var/lib/mysql"
+    ports:
+      - "8078:3306"
     secrets:
       - mysql-root-password
   tmsftt-apis:
-    image: youchendu/tmsftt-apis:1.0
-    command: ["./wait-for-it.sh", "tmsftt-db:3306", "-s", "-t", "30", "--", "uwsgi", "--ini", "/uwsgi.ini"]
+    image: rest-apis:latest
+    command: ["./wait-for-it.sh", "tmsftt-db:3306", "-s", "-t", "120", "--", "uwsgi", "--ini", "/uwsgi.ini"]
     environment:
       - SECRET_KEY_FILE=/run/secrets/django-secret-key
       - DATABASE_PASSWORD_FILE=/run/secrets/mysql-root-password
@@ -20,21 +24,23 @@ services:
     secrets:
       - django-secret-key
       - mysql-root-password
-    ports:
-      - "9000:8080"
     depends_on:
       - tmsftt-db
+    volumes:
+      - "./data/media-data:/media"
     deploy:
       mode: global
       restart_policy:
         condition: on-failure
         delay: 3s
   tmsftt-web-server:
-    image: youchendu/tmsftt-web-server:1.0
+    image: web-server:latest
     ports:
       - "8000:80"
     depends_on:
       - tmsftt-apis
+    volumes:
+      - "./data/media-data:/media:ro"
     deploy:
       replicas: 1
       restart_policy:

@@ -15,16 +15,13 @@ RUN pip install -i https://pypi.tuna.tsinghua.edu.cn/simple -r /requirements.txt
 # Copy health checker
 COPY wait-for-it.sh /
 
-# Copy entrypoint.sh
-COPY entrypoint.sh /
-RUN chmod a+x /entrypoint.sh
-
 # COPY uwsgi config file
 COPY uwsgi.ini /
 
 # Copy project
 COPY TMSFTT-BE /
 
-WORKDIR /
+# Create touch-reload file
+RUN touch /uwsgi-touch-reload
 
-EXPOSE 8080
+WORKDIR /
