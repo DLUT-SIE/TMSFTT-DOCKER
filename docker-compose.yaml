@@ -46,6 +46,44 @@ services:
       restart_policy:
         condition: on-failure
         delay: 3s
+  redis:
+    image: redis:alpine
+  celery-worker:
+    image: rest-apis:latest
+    command: ["./wait-for-it.sh", "tmsftt-db:3306", "-s", "-t", "120", "--", "celery", "-A", "TMSFTT", "worker", "-l", "info"]
+    depends_on:
+      - redis
+      - tmsftt-db
+    environment:
+      - SECRET_KEY_FILE=/run/secrets/django-secret-key
+      - DATABASE_PASSWORD_FILE=/run/secrets/mysql-root-password
+      - DJANGO_SETTINGS_MODULE=TMSFTT.settings_prod
+    secrets:
+      - django-secret-key
+      - mysql-root-password
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 3s
+  celery-beat:
+    image: rest-apis:latest
+    command: ["./wait-for-it.sh", "tmsftt-db:3306", "-s", "-t", "120", "--", "celery", "-A", "TMSFTT", "beat", "-l", "info"]
+    depends_on:
+      - redis
+      - tmsftt-db
+    environment:
+      - SECRET_KEY_FILE=/run/secrets/django-secret-key
+      - DATABASE_PASSWORD_FILE=/run/secrets/mysql-root-password
+      - DJANGO_SETTINGS_MODULE=TMSFTT.settings_prod
+    secrets:
+      - django-secret-key
+      - mysql-root-password
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 3s
   visualizer:
     image: dockersamples/visualizer:stable
     ports:
