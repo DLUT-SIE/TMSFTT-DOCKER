@@ -84,6 +84,26 @@ services:
       restart_policy:
         condition: on-failure
         delay: 3s
+  tmsftt-cron-full-backup:
+    image: full-backup
+    depends_on:
+      - tmsftt-db
+    volumes:
+      - "./data/backup/full-backups:/backup"
+      - "./data/media-data:/media:ro"
+    environment:
+      - MYSQL_HOST=tmsftt-db
+      - MYSQL_USER=root
+      - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/mysql-root-password
+      - INIT_BACKUP=0
+      - CRON_TIME=0 0 * * *
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 3s
+    secrets:
+      - mysql-root-password
   visualizer:
     image: dockersamples/visualizer:stable
     ports:
