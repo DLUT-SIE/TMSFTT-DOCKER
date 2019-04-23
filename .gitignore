@@ -1,2 +1,9 @@
 secrets/
-data/
+data/backup/full-backups/*
+!data/backup/full-backups/.gitkeep
+data/backup/increment-backup/*
+!data/backup/increment-backup/.gitkeep
+data/db-data/*
+!data/db-data/.gitkeep
+data/media-data/*
+!data/media-data/.gitkeep
