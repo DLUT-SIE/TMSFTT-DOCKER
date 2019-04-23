@@ -25,20 +25,23 @@ do
     fi
   fi
 done
-echo "==> Copying media files"
-cp -r /media $BASEDIR
-cd $BASEDIR
-tar -zcf media.tar.gz media
-rm -rf media
-cd /
-echo "==> Media files copied"
+if [ "$BACKUP_MEDIA" -eq "1" ]
+then
+  echo "==> Copying media files"
+  cp -r /media $BASEDIR
+  cd $BASEDIR
+  tar -zcf media.tar.gz media
+  rm -rf media
+  cd /
+  echo "==> Media files copied"
+fi
 
 if [ -n "$MAX_BACKUPS" ]
 then
   echo "=> Max number of backups ("$MAX_BACKUPS") reached. Deleting oldest backups"
-  while [ "$(find /backup -maxdepth 1 -mindepth 1 | wc -l)" -gt "$MAX_BACKUPS" ]
+  while [ "$(find /backup -maxdepth 1 -mindepth 1 -type d | wc -l)" -gt "$MAX_BACKUPS" ]
   do
-    TARGET=$(find /backup -maxdepth 1 -mindepth 1 | sort | head -n 1)
+    TARGET=$(find /backup -maxdepth 1 -mindepth 1 -type d | sort | head -n 1)
     rm -rf "$TARGET"
     echo "==> Backup $TARGET has been deleted"
   done

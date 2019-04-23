@@ -8,6 +8,7 @@ services:
       - MYSQL_USER=root
       - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/mysql-root-password
       - MYSQL_DATABASE=TMSFTT
+      - TZ=Asia/Shanghai
     volumes:
       - "./data/db-data:/var/lib/mysql"
     ports:
@@ -21,6 +22,7 @@ services:
       - SECRET_KEY_FILE=/run/secrets/django-secret-key
       - DATABASE_PASSWORD_FILE=/run/secrets/mysql-root-password
       - DJANGO_SETTINGS_MODULE=TMSFTT.settings_prod
+      - TZ=Asia/Shanghai
     secrets:
       - django-secret-key
       - mysql-root-password
@@ -39,6 +41,8 @@ services:
       - "8000:80"
     depends_on:
       - tmsftt-apis
+    environment:
+      - TZ=Asia/Shanghai
     volumes:
       - "./data/media-data:/media:ro"
     deploy:
@@ -68,7 +72,7 @@ services:
         delay: 3s
   celery-beat:
     image: rest-apis:latest
-    command: ["./wait-for-it.sh", "tmsftt-db:3306", "-s", "-t", "120", "--", "celery", "-A", "TMSFTT", "beat", "-l", "info"]
+    command: ["./wait-for-it.sh", "tmsftt-db:3306", "-s", "-t", "60", "--", "celery", "-A", "TMSFTT", "beat", "-l", "info"]
     depends_on:
       - redis
       - tmsftt-db
@@ -84,19 +88,69 @@ services:
       restart_policy:
         condition: on-failure
         delay: 3s
-  tmsftt-cron-full-backup:
+  tmsftt-backup-full-daily:
     image: full-backup
     depends_on:
       - tmsftt-db
     volumes:
-      - "./data/backup/full-backups:/backup"
+      - "./data/backup/full/daily:/backup"
       - "./data/media-data:/media:ro"
     environment:
       - MYSQL_HOST=tmsftt-db
       - MYSQL_USER=root
       - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/mysql-root-password
-      - INIT_BACKUP=0
+      - MAX_BACKUPS=7
+      - INIT_BACKUP=1
       - CRON_TIME=0 0 * * *
+      - TIMEOUT=60s
+      - BACKUP_MEDIA=0
+      - TZ=Asia/Shanghai
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 3s
+    secrets:
+      - mysql-root-password
+  tmsftt-backup-full-weekly:
+    image: full-backup
+    depends_on:
+      - tmsftt-db
+    volumes:
+      - "./data/backup/full/weekly:/backup"
+      - "./data/media-data:/media:ro"
+    environment:
+      - MYSQL_HOST=tmsftt-db
+      - MYSQL_USER=root
+      - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/mysql-root-password
+      - MAX_BACKUPS=4
+      - INIT_BACKUP=1
+      - CRON_TIME=0 0 * * 1
+      - TIMEOUT=60s
+      - TZ=Asia/Shanghai
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 3s
+    secrets:
+      - mysql-root-password
+  tmsftt-backup-full-monthly:
+    image: full-backup
+    depends_on:
+      - tmsftt-db
+    volumes:
+      - "./data/backup/full/monthly:/backup"
+      - "./data/media-data:/media:ro"
+    environment:
+      - MYSQL_HOST=tmsftt-db
+      - MYSQL_USER=root
+      - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/mysql-root-password
+      - MAX_BACKUPS=24
+      - INIT_BACKUP=1
+      - CRON_TIME=0 0 1 * *
+      - TIMEOUT=60s
+      - TZ=Asia/Shanghai
     deploy:
       replicas: 1
       restart_policy:

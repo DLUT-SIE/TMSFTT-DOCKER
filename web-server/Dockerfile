@@ -22,8 +22,13 @@ RUN npm run build -- --prod --output-path ./dist/out
 
 FROM nginx:1.15.9-alpine
 
+# Add support for TZ
+RUN apk add --update tzdata
+RUN rm -rf /var/cache/apk/*
+
 # Remove default nginx website
 RUN rm -rf /usr/share/nginx/html/*
+
 
 # Copy output directory from builder to nginx image
 COPY --from=builder /app/dist/out /usr/share/nginx/html
