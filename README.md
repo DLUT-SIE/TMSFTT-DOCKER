@@ -3,18 +3,24 @@
 Build backend server for RESTful apis.
 
 ```
-$ docker build --tag=tmsftt-apis:1.0 rest-api
+$ docker build --tag=tmsftt-apis:latest rest-api
 ```
 
 Build Angular and Nginx server.
 
 ```
-$ docker build --tag=tmsftt-web-server:1.0 web-server
+$ docker build --tag=tmsftt-web-server:latest web-server
+```
+
+Build service for backup (full mode).
+
+```
+$ docker build -t --tag=full-backup:latest
 ```
 
 # Deploy
 
-First, start Docker Swarm Mode.
+First, initialize Docker Swarm Mode.
 
 ```
 docker swarm init
@@ -40,7 +46,12 @@ GRANT ALL on TMSFTT.TBL_DW_INFO TO 'dlut-its'@'%';
 
 # Update
 
-First, build image for the update.
+First, build new images for containers requiring update.
+
 > See Build part of this README.
 
-Then, <TBD>
+Then, update the container with new images, take `web-server` for example.
+
+```
+docker service update --force TMSFTT_tmsftt-web-server
+```

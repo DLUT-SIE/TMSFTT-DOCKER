@@ -29,7 +29,7 @@ services:
     depends_on:
       - tmsftt-db
     volumes:
-      - "./data/media-data:/media"
+      - "./data/media-data:/protected-files"
     deploy:
       mode: global
       restart_policy:
@@ -44,7 +44,7 @@ services:
     environment:
       - TZ=Asia/Shanghai
     volumes:
-      - "./data/media-data:/media:ro"
+      - "./data/media-data:/protected-files:ro"
     deploy:
       replicas: 1
       restart_policy:
@@ -89,7 +89,7 @@ services:
         condition: on-failure
         delay: 3s
   tmsftt-backup-full-daily:
-    image: full-backup
+    image: full-backup:latest
     depends_on:
       - tmsftt-db
     volumes:
@@ -100,8 +100,8 @@ services:
       - MYSQL_USER=root
       - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/mysql-root-password
       - MAX_BACKUPS=7
-      - INIT_BACKUP=1
-      - CRON_TIME=0 0 * * *
+      - INIT_BACKUP=0
+      - CRON_TIME=0 1 * * *
       - TIMEOUT=60s
       - BACKUP_MEDIA=0
       - TZ=Asia/Shanghai
@@ -113,7 +113,7 @@ services:
     secrets:
       - mysql-root-password
   tmsftt-backup-full-weekly:
-    image: full-backup
+    image: full-backup:latest
     depends_on:
       - tmsftt-db
     volumes:
@@ -124,8 +124,8 @@ services:
       - MYSQL_USER=root
       - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/mysql-root-password
       - MAX_BACKUPS=4
-      - INIT_BACKUP=1
-      - CRON_TIME=0 0 * * 1
+      - INIT_BACKUP=0
+      - CRON_TIME=0 1 * * 1
       - TIMEOUT=60s
       - TZ=Asia/Shanghai
     deploy:
@@ -136,7 +136,7 @@ services:
     secrets:
       - mysql-root-password
   tmsftt-backup-full-monthly:
-    image: full-backup
+    image: full-backup:latest
     depends_on:
       - tmsftt-db
     volumes:
@@ -147,8 +147,8 @@ services:
       - MYSQL_USER=root
       - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/mysql-root-password
       - MAX_BACKUPS=24
-      - INIT_BACKUP=1
-      - CRON_TIME=0 0 1 * *
+      - INIT_BACKUP=0
+      - CRON_TIME=0 1 1 * *
       - TIMEOUT=60s
       - TZ=Asia/Shanghai
     deploy:
