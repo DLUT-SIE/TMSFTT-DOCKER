@@ -2,7 +2,7 @@ version: "3.6"
 
 services:
   tmsftt-db:
-    image: mysql
+    image: mysql:8.0.15
     command: --default-authentication-plugin=mysql_native_password --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
     environment:
       - MYSQL_USER=root
