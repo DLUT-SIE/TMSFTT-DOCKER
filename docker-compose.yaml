@@ -101,7 +101,7 @@ services:
       - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/mysql-root-password
       - MAX_BACKUPS=7
       - INIT_BACKUP=0
-      - CRON_TIME=0 1 * * *
+      - CRON_TIME=30 0 * * *
       - TIMEOUT=60s
       - BACKUP_MEDIA=0
       - TZ=Asia/Shanghai
@@ -125,7 +125,7 @@ services:
       - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/mysql-root-password
       - MAX_BACKUPS=4
       - INIT_BACKUP=0
-      - CRON_TIME=0 1 * * 1
+      - CRON_TIME=30 0 * * 1
       - TIMEOUT=60s
       - TZ=Asia/Shanghai
     deploy:
@@ -148,7 +148,7 @@ services:
       - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/mysql-root-password
       - MAX_BACKUPS=24
       - INIT_BACKUP=0
-      - CRON_TIME=0 1 1 * *
+      - CRON_TIME=30 0 1 * *
       - TIMEOUT=60s
       - TZ=Asia/Shanghai
     deploy:
@@ -158,6 +158,16 @@ services:
         delay: 3s
     secrets:
       - mysql-root-password
+  tmsftt-backup-incremental:
+    image: incremental-backup:latest
+    volumes:
+      - "./data/backup/incremental:/backup"
+      - "./data/media-data:/media:ro"
+    environment:
+      - CRON_TIME=30 0 * * *
+      - TZ=Asia/Shanghai
+      - BACKUP_FROM=/media
+      - BACKUP_TO=/backup
   visualizer:
     image: dockersamples/visualizer:stable
     ports:

@@ -3,7 +3,7 @@
 [ -z "${MYSQL_PASS:=$MYSQL_PASSWORD}" ] && { echo "=> MYSQL_PASS cannot be empty" && exit 1; }
 
 DATE=$(date +%Y%m%d%H%M)
-echo "=> Backup started at $(date "+%Y-%m-%d %H:%M:%S")"
+echo "=> Backup process started  at $(date "+%Y-%m-%d %H:%M:%S")"
 databases=${MYSQL_DATABASE:-${MYSQL_DB:-$(mysql -h "$MYSQL_HOST" -P "$MYSQL_PORT" -u "$MYSQL_USER" -p"$MYSQL_PASS" -e "SHOW DATABASES;" | tr -d "| " | grep -v Database)}}
 BASEDIR=/backup/"$DATE"
 mkdir $BASEDIR
@@ -47,4 +47,4 @@ then
   done
 fi
 
-echo "=> Backup process finished at echo $(date "+%Y-%m-%d %H:%M:%S")"
+echo "=> Backup process finished at $(date "+%Y-%m-%d %H:%M:%S")"
