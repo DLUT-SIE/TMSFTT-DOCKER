@@ -1,6 +1,7 @@
 FROM alpine:3.7
 LABEL maintainer "Youchen Du <youchen.du@gmail.com>"
 
+RUN sed -i 's/dl-cdn.alpinelinux.org/mirror.tuna.tsinghua.edu.cn/g' /etc/apk/repositories
 RUN apk add --update bash
 RUN apk add --update rsync
 RUN apk add --update tzdata

@@ -23,6 +23,7 @@ RUN npm run build -- --prod --output-path ./dist/out
 FROM nginx:1.15.9-alpine
 
 # Add support for TZ
+RUN sed -i 's/dl-cdn.alpinelinux.org/mirror.tuna.tsinghua.edu.cn/g' /etc/apk/repositories
 RUN apk add --update tzdata
 RUN rm -rf /var/cache/apk/*
 
