@@ -39,10 +39,15 @@ services:
     image: web-server:latest
     ports:
       - "8000:80"
+      - "8010:443"
     depends_on:
       - tmsftt-apis
     environment:
       - TZ=Asia/Shanghai
+    secrets:
+      - nginx-server-key
+      - nginx-server-cert
+      - nginx-dhparam
     volumes:
       - "./data/media-data:/protected-files:ro"
     deploy:
@@ -183,3 +188,9 @@ secrets:
     file: ./secrets/django-secret-key
   mysql-root-password:
     file: ./secrets/mysql-root-password
+  nginx-server-key:
+    file: ./secrets/server.key
+  nginx-server-cert:
+    file: ./secrets/server.crt
+  nginx-dhparam:
+    file: ./secrets/dhparam.pem
