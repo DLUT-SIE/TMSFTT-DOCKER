@@ -37,17 +37,12 @@ services:
         delay: 3s
   tmsftt-web-server:
     image: web-server:latest
-    ports:
-      - "8000:80"
-      - "8010:443"
     depends_on:
       - tmsftt-apis
     environment:
       - TZ=Asia/Shanghai
-    secrets:
-      - nginx-server-key
-      - nginx-server-cert
-      - nginx-dhparam
+      - VIRTUAL_HOST=tmsftt.local
+      - VIRTUAL_PORT=80
     volumes:
       - "./data/media-data:/protected-files:ro"
     deploy:
@@ -182,15 +177,18 @@ services:
     deploy:
       placement:
         constraints: [node.role == manager]
+  tmsftt-proxy:
+    image: jwilder/nginx-proxy
+    ports:
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - ./secrets/nginx-certs:/etc/nginx/certs:ro
+    depends_on:
+      - tmsftt-web-server
 
 secrets:
   django-secret-key:
     file: ./secrets/django-secret-key
   mysql-root-password:
     file: ./secrets/mysql-root-password
-  nginx-server-key:
-    file: ./secrets/server.key
-  nginx-server-cert:
-    file: ./secrets/server.crt
-  nginx-dhparam:
-    file: ./secrets/dhparam.pem

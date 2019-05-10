@@ -59,7 +59,13 @@ mysql> GRANT ALL on TMSFTT.TBL_DW_INFO TO 'dlut-its'@'%';
 
 # Update
 
-First, build new images for containers requiring update.
+First, Update codebase with Git.
+
+```shell
+$ git submodule foreach git pull
+```
+
+Second, build new images for containers requiring update.
 
 > See Build part of this README.
 
@@ -92,3 +98,7 @@ To restore a database from a previous backup, try to run:
 ```shell
 $ docker container exec <container-name> /restore.sh /backup/path/to/backup.sql.gz
 ```
+
+# Deploy notes
+
+1. Update `ALLOWED_HOSTS` in `TMSFTT/TMSFTT_prod.py`.
