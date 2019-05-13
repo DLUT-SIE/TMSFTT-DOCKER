@@ -55,6 +55,13 @@ $ mysql -uroot -p<mysql-root-password>
 mysql> CREATE USER 'dlut-its'@'%' IDENTIFIED WITH mysql_native_password BY '<PASSWORD HERE>';
 mysql> GRANT ALL on TMSFTT.TBL_JB_INFO TO 'dlut-its'@'%';
 mysql> GRANT ALL on TMSFTT.TBL_DW_INFO TO 'dlut-its'@'%';
+
+```
+
+* Load time zone table into database.
+
+```shell
+$ mysql_tzinfo_to_sql /usr/share/zoneinfo | mysql -u root -p mysql
 ```
 
 # Update
