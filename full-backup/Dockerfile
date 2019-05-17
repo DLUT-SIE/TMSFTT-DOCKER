@@ -1,7 +1,6 @@
 FROM alpine:3.7
 LABEL maintainer "Fco. Javier Delgado del Hoyo <frandelhoyo@gmail.com>"
 
-RUN sed -i 's/dl-cdn.alpinelinux.org/mirror.tuna.tsinghua.edu.cn/g' /etc/apk/repositories
 RUN apk add --update bash
 RUN apk add --update mysql-client
 RUN apk add --update gzip
