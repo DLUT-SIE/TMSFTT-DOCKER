@@ -51,7 +51,7 @@ services:
         condition: on-failure
         delay: 3s
   redis:
-    image: redis:alpine
+    image: redis:5.0.5-alpine
   celery-worker:
     image: sielab303/tmsftt-rest-apis
     command: ["./wait-for-it.sh", "tmsftt-db:3306", "-s", "-t", "120", "--", "celery", "-A", "TMSFTT", "worker", "-l", "info"]
