@@ -185,6 +185,8 @@ services:
       - html:/usr/share/nginx/html
       - ./secrets/nginx-certs:/etc/nginx/certs
       - /var/run/docker.sock:/tmp/docker.sock:ro
+    environment:
+      - DEFAULT_HOST=test.feingst.com
     depends_on:
       - tmsftt-web-server
     labels:
