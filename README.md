@@ -1,27 +1,29 @@
 # Build
 
-Build backend server for RESTful apis.
+Normally, the images will be built automatically on Docker Hub and no actions need to be taken manually.
+
+Build backend server for RESTful apis. Should run in `TMSFTT-BE` directory.
 
 ```shell
-$ docker build --tag=rest-apis rest-apis
+$ docker build --tag=sielab303/tmsftt-rest-apis .
 ```
 
-Build Angular and Nginx server.
+Build Angular and Nginx server. Should run in `TMSFTT-FE` directory.
 
 ```shell
-$ docker build --tag=web-server web-server
+$ docker build --tag=sielab303/tmsftt-web-server .
 ```
 
 Build service for backup (full mode).
 
 ```shell
-$ docker build -t --tag=full-backup:latest
+$ docker build --tag=sielab303/tmsftt-full-backup full-backup
 ```
 
 Build service for backup (incremental mode).
 
 ```shell
-$ docker build --tag=incremental-backup incremental-backup
+$ docker build --tag=sielab303/tmsftt-incremental-backup incremental-backup
 ```
 
 # Deploy
@@ -38,8 +40,7 @@ Then, deploy our service stack.
 $ docker stack deploy -c docker-compose.yaml TMSFTT
 ```
 
-After that, populate initial data manually. Use `docker exec -it <CONTAINER ID> bash` to enter the
-container for populating.
+After that, populate initial data manually. Use `docker exec -it <CONTAINER ID> bash` to enter the container for populating.
 
 * Enter the container of `tmsftt-apis` to populate databases.
 
@@ -66,20 +67,20 @@ $ mysql_tzinfo_to_sql /usr/share/zoneinfo | mysql -u root -p mysql
 
 # Update
 
-First, Update codebase with Git.
+The images will be built automatically after PR has been merged, wait for
+Docker Hub to build (~20 minutes for `TMSFTT-FE`, ~4 minutes for `TMSFTT-BE`).
 
+Take `tmsftt-web-server` for example.
+
+First, after the newest image was built, pull the latest image.
 ```shell
-$ git submodule foreach git pull
+$ docker pull sielab303/tmsftt-web-server
 ```
 
-Second, build new images for containers requiring update.
-
-> See Build part of this README.
-
-Then, update the container with new images, take `web-server` for example.
+Second, Update the container with new image.
 
 ```shell
-$ docker service update --force TMSFTT_tmsftt-web-server
+$ docker service update TMSFTT_tmsftt-web-server
 ```
 
 # Backup policy
@@ -91,7 +92,6 @@ $ docker service update --force TMSFTT_tmsftt-web-server
 	* Weekly: For databases and media files, keep weekly backups (to `./data/full/weekly`) for last 4 weeks, backup process starts at 0:30 on every Monday.
 	* Monthly: For database and media files, keep monthly backups (to `./data/full/monthly`) for last 24 months, backup process starts at 0:30 on the first day of every month.
 
-	
 # Restore database
 
 To list all available backups in the running docker container, try to run:
@@ -108,4 +108,5 @@ $ docker container exec <container-name> /restore.sh /backup/path/to/backup.sql.
 
 # Deploy notes
 
-1. Update `ALLOWED_HOSTS` in `TMSFTT/TMSFTT_prod.py`.
+1. Update settings for `TMSFTT-BE` in `TMSFTT/TMSFTT_prod.py`, e.g. `ALLOWED_HOSTED`, `SOAP_AUTH_*`, `CAS_SERVER_URL`.
+2. Update settings for `TMSFTT-FE` in `src/environments/environment_prod.ts`.
