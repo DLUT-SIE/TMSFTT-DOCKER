@@ -54,7 +54,7 @@ services:
   redis:
     image: redis:5.0.5-alpine
   celery-worker:
-    image: sielab303/tmsftt-rest-apis
+    image: sielab303/tmsftt-rest-apis:latest
     command: ["./wait-for-it.sh", "tmsftt-db:3306", "-s", "-t", "120", "--", "celery", "-A", "TMSFTT", "worker", "-l", "info"]
     depends_on:
       - redis
