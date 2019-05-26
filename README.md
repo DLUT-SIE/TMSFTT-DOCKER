@@ -86,11 +86,11 @@ $ docker service update TMSFTT_tmsftt-web-server
 # Backup policy
 
 * Incremental backup
-	* Only for media files (from `./data/media-data`, to `./data/backup/incremental`), sync with online media files at 0:30 on a daily basis.
+	* Only for media files (from `volume <media-data>`, to `volume <incremental-backups>`), sync with online media files at 0:30 on a daily basis.
 * Full backup
-	* Daily: Only for databases, keep daily backups (to `./data/full/daily`) for last 7 days, backup process starts at 0:30 on a daily basis.
-	* Weekly: For databases and media files, keep weekly backups (to `./data/full/weekly`) for last 4 weeks, backup process starts at 0:30 on every Monday.
-	* Monthly: For database and media files, keep monthly backups (to `./data/full/monthly`) for last 24 months, backup process starts at 0:30 on the first day of every month.
+	* Daily: Only for databases, keep daily backups (to `volume <daily-full-backups>`) for last 7 days, backup process starts at 0:30 on a daily basis.
+	* Weekly: For databases and media files, keep weekly backups (to `volume <weekly-full-backups>`) for last 4 weeks, backup process starts at 0:30 on every Monday.
+	* Monthly: For database and media files, keep monthly backups (to `volume <monthly-full-backups>`) for last 24 months, backup process starts at 0:30 on the first day of every month.
 
 # Restore database
 
