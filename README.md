@@ -1,6 +1,6 @@
 # Build
 
-Normally, the images will be built automatically on Docker Hub and no actions need to be taken manually.
+Normally, the images will be built automatically on Docker Hub and no actions need to be taken manually, but just in case you want to build these images by yourself, below are the commands for building the images.
 
 Build backend server for RESTful apis. Should run in `TMSFTT-BE` directory.
 
