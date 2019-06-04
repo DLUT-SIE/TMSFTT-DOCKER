@@ -108,5 +108,5 @@ $ docker container exec <container-name> /restore.sh /backup/path/to/backup.sql.
 
 # Deploy notes
 
-1. Update settings for `TMSFTT-BE` in `TMSFTT/TMSFTT_prod.py`, e.g. `ALLOWED_HOSTED`, `SOAP_AUTH_*`, `CAS_SERVER_URL`.
+1. Update settings for `TMSFTT-BE` in `TMSFTT/TMSFTT_prod.py`, e.g. `ALLOWED_HOSTS`, `SOAP_AUTH_*`, `CAS_SERVER_URL`.
 2. Update settings for `TMSFTT-FE` in `src/environments/environment_prod.ts`.
