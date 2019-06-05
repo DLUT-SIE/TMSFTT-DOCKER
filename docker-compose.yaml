@@ -12,7 +12,10 @@ services:
     volumes:
       - db-data:/var/lib/mysql
     ports:
-      - "8078:3306"
+      - target: 3306
+        published: 8078
+        protocol: tcp
+        mode: host
     secrets:
       - mysql-root-password
   tmsftt-apis:
@@ -40,7 +43,10 @@ services:
     depends_on:
       - tmsftt-apis
     ports:
-      - "80:80"
+      - target: 80
+        published: 80
+        protocol: tcp
+        mode: host
     environment:
       - TZ=Asia/Shanghai
     volumes:

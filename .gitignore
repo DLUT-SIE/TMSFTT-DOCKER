@@ -1,3 +1,4 @@
+dev-secrets/
 secrets/
 data/backup/**/*.gz
 data/db-data/*
