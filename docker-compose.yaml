@@ -19,7 +19,7 @@ services:
     secrets:
       - mysql-root-password
   tmsftt-apis:
-    image: sielab303/tmsftt-rest-apis:latest
+    image: yqzzxlj/tmsftt-rest-apis3:latest
     command: ["./wait-for-it.sh", "tmsftt-db:3306", "-s", "-t", "120", "--", "uwsgi", "--ini", "/uwsgi.ini"]
     environment:
       - SECRET_KEY_FILE=/run/secrets/django-secret-key
@@ -41,7 +41,7 @@ services:
         condition: on-failure
         delay: 3s
   tmsftt-web-server:
-    image: sielab303/tmsftt-web-server:latest
+    image: yqzzxlj/tmsftt-web-test4:latest
     depends_on:
       - tmsftt-apis
     ports:
@@ -61,7 +61,7 @@ services:
   redis:
     image: redis:5.0.5-alpine
   celery-worker:
-    image: sielab303/tmsftt-rest-apis:latest
+    image: yqzzxlj/tmsftt-rest-apis3:latest
     command: ["./wait-for-it.sh", "tmsftt-db:3306", "-s", "-t", "120", "--", "celery", "-A", "TMSFTT", "worker", "-l", "info"]
     depends_on:
       - redis
@@ -81,7 +81,7 @@ services:
         condition: on-failure
         delay: 3s
   celery-beat:
-    image: sielab303/tmsftt-rest-apis:latest
+    image: yqzzxlj/tmsftt-rest-apis3:latest
     command: ["./wait-for-it.sh", "tmsftt-db:3306", "-s", "-t", "60", "--", "celery", "-A", "TMSFTT", "beat", "-l", "info"]
     depends_on:
       - redis
