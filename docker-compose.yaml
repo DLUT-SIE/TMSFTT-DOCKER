@@ -179,6 +179,8 @@ secrets:
     file: ./secrets/django-secret-key
   mysql-root-password:
     file: ./secrets/mysql-root-password
+  soap-auth-secret-key:
+    file: ./secrets/soap-auth-secret-key
 
 volumes:
   db-data:
