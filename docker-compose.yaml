@@ -68,6 +68,7 @@ services:
       - tmsftt-db
     environment:
       - SECRET_KEY_FILE=/run/secrets/django-secret-key
+      - SOAP_AUTH_SECRET_KEY_FILE=/run/secrets/soap-auth-secret-key
       - DATABASE_PASSWORD_FILE=/run/secrets/mysql-root-password
       - DJANGO_SETTINGS_MODULE=TMSFTT.settings_prod
     secrets:
@@ -86,6 +87,7 @@ services:
       - tmsftt-db
     environment:
       - SECRET_KEY_FILE=/run/secrets/django-secret-key
+      - SOAP_AUTH_SECRET_KEY_FILE=/run/secrets/soap-auth-secret-key
       - DATABASE_PASSWORD_FILE=/run/secrets/mysql-root-password
       - DJANGO_SETTINGS_MODULE=TMSFTT.settings_prod
     secrets:
