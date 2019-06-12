@@ -74,6 +74,7 @@ services:
     secrets:
       - django-secret-key
       - mysql-root-password
+      - soap-auth-secret-key
     deploy:
       replicas: 1
       restart_policy:
@@ -93,6 +94,7 @@ services:
     secrets:
       - django-secret-key
       - mysql-root-password
+      - soap-auth-secret-key
     deploy:
       replicas: 1
       restart_policy:
