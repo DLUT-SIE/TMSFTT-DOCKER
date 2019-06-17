@@ -30,7 +30,7 @@ services:
     secrets:
       - django-secret-key
       - mysql-root-password
-      - soap-auth-secret-key
+      - soap-auth-secret-key-v20190617
     depends_on:
       - tmsftt-db
     volumes:
@@ -74,7 +74,7 @@ services:
     secrets:
       - django-secret-key
       - mysql-root-password
-      - soap-auth-secret-key
+      - soap-auth-secret-key-v20190617
     deploy:
       replicas: 1
       restart_policy:
@@ -94,7 +94,7 @@ services:
     secrets:
       - django-secret-key
       - mysql-root-password
-      - soap-auth-secret-key
+      - soap-auth-secret-key-v20190617
     deploy:
       replicas: 1
       restart_policy:
@@ -183,7 +183,7 @@ secrets:
     file: ./secrets/django-secret-key
   mysql-root-password:
     file: ./secrets/mysql-root-password
-  soap-auth-secret-key:
+  soap-auth-secret-key-v20190617:
     file: ./secrets/soap-auth-secret-key
 
 volumes:
